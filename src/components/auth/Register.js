@@ -1,5 +1,13 @@
 import React, { Component } from 'react';
 
+const initialState = {
+  name: '',
+  email: '',
+  password: '',
+  password2: '',
+  fronterrors: {}
+}
+
 export class Register extends Component {
 
   constructor() {
@@ -10,7 +18,7 @@ export class Register extends Component {
       email: '',
       password: '',
       password2: '',
-      errors: {}
+      fronterrors: {}
     }
 
     this.onChange = this.onChange.bind(this);
@@ -21,45 +29,96 @@ export class Register extends Component {
     this.setState({[e.target.name]: e.target.value});
   }
 
+  validate() {
+
+    let fronterrors = {};
+
+    let regex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/;
+    if (!regex.test(this.state.password)) {
+      fronterrors.password = 'Password need to have 6 to 20 characters which contain at least one numeric digit, one uppercase and one lowercase letter'
+    }
+
+    if (this.state.name.length < 2) {
+      fronterrors.name = 'Name must be between 2 and 40 characters'
+    }
+
+    if (this.state.name.length > 40) {
+      fronterrors.name = 'Name must be between 2 and 40 characters'
+    }
+
+    if (this.state.password !== this.state.password2) {
+      fronterrors.password2 ='Passwords must match'
+    }
+
+    if (!this.state.email.includes('@')){
+      fronterrors.email = 'Invalid email'
+    }
+
+    if (Object.keys(fronterrors).length > 0) {
+      this.setState({fronterrors});
+      return false;
+    }
+
+    return true;
+  }
+
   onSubmit(e) {
 
     e.preventDefault();
-    const newUser = {
-      name: this.state.name,
-      email: this.state.email,
-      password: this.state.password,
-      password2: this.state.password2
-    }
 
-    console.log(newUser);
+    const isValid = this.validate();
+    //We check if valid returns true
+    console.log(isValid);
+
+    if (isValid) {
+      const newUser = {
+        name: this.state.name,
+        email: this.state.email,
+        password: this.state.password,
+        password2: this.state.password2,
+      }
+      console.log(newUser);
+      //clear form
+      this.setState(initialState)
+    }
+    
   }
 
 
   render() {
     return (
       <div className="register">
+        <div className="container">
+          <div className="row">
+            <div className="col-md-8 m-auto">
+              <h1 className="display-4 text-center"> Register </h1>
+              <p className="lead text-center">
+                Create your account
+              </p>
 
-        <h1> Register </h1>
-        
-        <form onSubmit={this.onSubmit}> 
-        <div>
-          <input type="text" placeholder="Full Name" name="name" value={this.state.name} onChange={this.onChange} />
-        </div>
-        <div>
-          <input type="text" placeholder="Email" name="email" value={this.state.email} onChange={this.onChange} />
-        </div>
-        <div>
-         <input type="password" placeholder="Password" name="password" value={this.state.password} onChange={this.onChange} />
-        </div>
-        <div>
-          <input type="password" placeholder="Repeat Password" name="password2" value={this.state.password2} onChange={this.onChange} />
-        </div>
-        <div>
-         <input type="submit" /> 
-        </div>
-      
-        </form>
+              <form onSubmit={this.onSubmit}> 
 
+                  <input className="form-control" type="text" placeholder="Full Name" name="name" value={this.state.name} onChange={this.onChange} />
+
+                  {this.state.fronterrors.name}
+
+                  <input className="form-control" type="text" placeholder="Email" name="email" value={this.state.email} onChange={this.onChange} />
+
+                  {this.state.fronterrors.email}
+
+                  <input className="form-control" type="password" placeholder="Password" name="password" value={this.state.password} onChange={this.onChange} />
+                  {this.state.fronterrors.password}
+
+                  <input className="form-control" type="password" placeholder="Repeat Password" name="password2" value={this.state.password2} onChange={this.onChange} />
+
+                  {this.state.fronterrors.password2}
+
+                <input className="btn btn-info btn-block mt-4" type="submit" /> 
+                
+                </form>
+            </div>
+          </div>
+        </div>
       </div>
     )
   }
