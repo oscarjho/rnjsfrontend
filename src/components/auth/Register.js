@@ -81,11 +81,12 @@ export class Register extends Component {
       }
       console.log(newUser);
 
+    /*
     axios
       .post('http://localhost:5000/api/users/register', newUser)
       .then(res => console.log(res.data))
       .catch(err => this.setState({ errors: err.response.data }));
-      
+    */
      //clear form
       this.setState(initialState);
       
