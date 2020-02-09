@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import axios from 'axios';
 
 const initialState = {
   name: '',
@@ -18,7 +19,8 @@ export class Register extends Component {
       email: '',
       password: '',
       password2: '',
-      fronterrors: {}
+      fronterrors: {},
+      errors : {}
     }
 
     this.onChange = this.onChange.bind(this);
@@ -32,7 +34,7 @@ export class Register extends Component {
   validate() {
 
     let fronterrors = {};
-
+    
     let regex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/;
     if (!regex.test(this.state.password)) {
       fronterrors.password = 'Password need to have 6 to 20 characters which contain at least one numeric digit, one uppercase and one lowercase letter'
@@ -78,14 +80,24 @@ export class Register extends Component {
         password2: this.state.password2,
       }
       console.log(newUser);
-      //clear form
-      this.setState(initialState)
+
+    axios
+      .post('http://localhost:5000/api/users/register', newUser)
+      .then(res => console.log(res.data))
+      .catch(err => this.setState({ errors: err.response.data }));
+      
+     //clear form
+      this.setState(initialState);
+      
     }
     
   }
 
 
   render() {
+
+    const { errors } = this.state;
+
     return (
       <div className="register">
         <div className="container">
@@ -101,21 +113,27 @@ export class Register extends Component {
                   <input className="form-control" type="text" placeholder="Full Name" name="name" value={this.state.name} onChange={this.onChange} />
 
                   {this.state.fronterrors.name}
+                  {errors.name}
 
                   <input className="form-control" type="text" placeholder="Email" name="email" value={this.state.email} onChange={this.onChange} />
 
                   {this.state.fronterrors.email}
+                  {errors.email}
 
                   <input className="form-control" type="password" placeholder="Password" name="password" value={this.state.password} onChange={this.onChange} />
+
                   {this.state.fronterrors.password}
+                  {errors.password}
 
                   <input className="form-control" type="password" placeholder="Repeat Password" name="password2" value={this.state.password2} onChange={this.onChange} />
 
                   {this.state.fronterrors.password2}
+                  {errors.password2}
 
                 <input className="btn btn-info btn-block mt-4" type="submit" /> 
                 
                 </form>
+                
             </div>
           </div>
         </div>
