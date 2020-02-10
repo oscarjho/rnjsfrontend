@@ -1,5 +1,9 @@
 import React, { Component } from 'react';
-import axios from 'axios';
+import {withRouter} from 'react-router-dom';
+import PropTypes from 'prop-types';
+import {connect} from 'react-redux';
+import { registerUser } from '../../actions/authActions';
+
 
 const initialState = {
   name: '',
@@ -27,6 +31,13 @@ export class Register extends Component {
     this.onSubmit = this.onSubmit.bind(this);
   }
 
+  
+  UNSAFE_componentWillReceiveProps(nextProps){
+    if(nextProps.errors) {
+      this.setState({errors: nextProps.errors});
+    }
+  }
+
   onChange(e) {
     this.setState({[e.target.name]: e.target.value});
   }
@@ -51,11 +62,11 @@ export class Register extends Component {
     if (this.state.password !== this.state.password2) {
       fronterrors.password2 ='Passwords must match'
     }
-
+    /*
     if (!this.state.email.includes('@')){
       fronterrors.email = 'Invalid email'
     }
-
+    */
     if (Object.keys(fronterrors).length > 0) {
       this.setState({fronterrors});
       return false;
@@ -81,12 +92,8 @@ export class Register extends Component {
       }
       console.log(newUser);
 
-    /*
-    axios
-      .post('http://localhost:5000/api/users/register', newUser)
-      .then(res => console.log(res.data))
-      .catch(err => this.setState({ errors: err.response.data }));
-    */
+      this.props.registerUser(newUser, this.props.history);
+
      //clear form
       this.setState(initialState);
       
@@ -99,6 +106,8 @@ export class Register extends Component {
 
     const { errors } = this.state;
 
+    const {user} = this.props.auth;
+
     return (
       <div className="register">
         <div className="container">
@@ -108,7 +117,7 @@ export class Register extends Component {
               <p className="lead text-center">
                 Create your account
               </p>
-
+              {user ? user.name : null}
               <form onSubmit={this.onSubmit}> 
 
                   <input className="form-control" type="text" placeholder="Full Name" name="name" value={this.state.name} onChange={this.onChange} />
@@ -143,4 +152,16 @@ export class Register extends Component {
   }
 }
 
-export default Register;
+Register.propTypes={
+  registerUser: PropTypes.func.isRequired,
+  auth: PropTypes.object.isRequired,
+  errors: PropTypes.object.isRequired
+};
+
+const mapStateToProps = (state) => ({
+  auth: state.auth,
+  errors: state.errors
+});
+
+
+export default connect(mapStateToProps, {registerUser})(withRouter(Register));
