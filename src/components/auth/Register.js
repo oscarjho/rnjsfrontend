@@ -106,7 +106,7 @@ export class Register extends Component {
 
     const { errors } = this.state;
 
-    const {user} = this.props.auth;
+    const { user } = this.props.auth;
 
     return (
       <div className="register">
@@ -117,25 +117,25 @@ export class Register extends Component {
               <p className="lead text-center">
                 Create your account
               </p>
-              {user ? user.name : null}
+              
               <form onSubmit={this.onSubmit}> 
 
-                  <input className="form-control" type="text" placeholder="Full Name" name="name" value={this.state.name} onChange={this.onChange} />
+                  <input className="form-control form-control-lg" type="text" placeholder="Full Name" name="name" value={this.state.name} onChange={this.onChange} />
 
                   {this.state.fronterrors.name}
                   {errors.name}
 
-                  <input className="form-control" type="text" placeholder="Email" name="email" value={this.state.email} onChange={this.onChange} />
+                  <input className="form-control form-control-lg" type="text" placeholder="Email" name="email" value={this.state.email} onChange={this.onChange} />
 
                   {this.state.fronterrors.email}
                   {errors.email}
 
-                  <input className="form-control" type="password" placeholder="Password" name="password" value={this.state.password} onChange={this.onChange} />
+                  <input className="form-control form-control-lg" type="password" placeholder="Password" name="password" value={this.state.password} onChange={this.onChange} />
 
                   {this.state.fronterrors.password}
                   {errors.password}
 
-                  <input className="form-control" type="password" placeholder="Repeat Password" name="password2" value={this.state.password2} onChange={this.onChange} />
+                  <input className="form-control form-control-lg" type="password" placeholder="Repeat Password" name="password2" value={this.state.password2} onChange={this.onChange} />
 
                   {this.state.fronterrors.password2}
                   {errors.password2}

@@ -10,5 +10,12 @@ img {
   height: 89vh;
   margin-top: 0px;
   margin-bottom: 0px;
+  display: flex;
 }
 
+.center-h {
+  justify-content: center;
+}
+.center-v {
+  align-items: center;
+}
