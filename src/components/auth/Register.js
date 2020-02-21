@@ -3,6 +3,7 @@ import {withRouter} from 'react-router-dom';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import { registerUser } from '../../actions/authActions';
+import TextFieldGroup from '../common/TextFieldGroup';
 
 
 const initialState = {
@@ -50,7 +51,7 @@ export class Register extends Component {
     if (!regex.test(this.state.password)) {
       fronterrors.password = 'Password need to have 6 to 20 characters which contain at least one numeric digit, one uppercase and one lowercase letter'
     }
-
+    
     if (this.state.name.length < 2) {
       fronterrors.name = 'Name must be between 2 and 40 characters'
     }
@@ -58,15 +59,15 @@ export class Register extends Component {
     if (this.state.name.length > 40) {
       fronterrors.name = 'Name must be between 2 and 40 characters'
     }
-
+    
     if (this.state.password !== this.state.password2) {
       fronterrors.password2 ='Passwords must match'
     }
-    /*
+    
     if (!this.state.email.includes('@')){
       fronterrors.email = 'Invalid email'
     }
-    */
+    
     if (Object.keys(fronterrors).length > 0) {
       this.setState({fronterrors});
       return false;
@@ -106,8 +107,6 @@ export class Register extends Component {
 
     const { errors } = this.state;
 
-    const { user } = this.props.auth;
-
     return (
       <div className="register">
         <div className="container">
@@ -120,25 +119,40 @@ export class Register extends Component {
               
               <form onSubmit={this.onSubmit}> 
 
-                  <input className="form-control form-control-lg" type="text" placeholder="Full Name" name="name" value={this.state.name} onChange={this.onChange} />
+                  <TextFieldGroup 
+                    placeholder="Full Name"
+                    name="name"
+                    value={this.state.name}
+                    onChange={this.onChange}
+                    error={errors.name || this.state.fronterrors.name}
+                  />
 
-                  {this.state.fronterrors.name}
-                  {errors.name}
+                  <TextFieldGroup 
+                    placeholder="Email"
+                    name="email"
+                    type="email"
+                    value={this.state.email}
+                    onChange={this.onChange}
+                    error={errors.email || this.state.fronterrors.email }
+                  />
 
-                  <input className="form-control form-control-lg" type="text" placeholder="Email" name="email" value={this.state.email} onChange={this.onChange} />
+                  <TextFieldGroup 
+                    placeholder="Password"
+                    name="password"
+                    type="password"
+                    value={this.state.password}
+                    onChange={this.onChange}
+                    error={errors.password || this.state.fronterrors.password }
+                  />
 
-                  {this.state.fronterrors.email}
-                  {errors.email}
-
-                  <input className="form-control form-control-lg" type="password" placeholder="Password" name="password" value={this.state.password} onChange={this.onChange} />
-
-                  {this.state.fronterrors.password}
-                  {errors.password}
-
-                  <input className="form-control form-control-lg" type="password" placeholder="Repeat Password" name="password2" value={this.state.password2} onChange={this.onChange} />
-
-                  {this.state.fronterrors.password2}
-                  {errors.password2}
+                  <TextFieldGroup 
+                    placeholder="Repeat Password"
+                    name="password2"
+                    type="password2"
+                    value={this.state.password2}
+                    onChange={this.onChange}
+                    error={errors.password2 || this.state.fronterrors.password2 }
+                  />
 
                 <input className="btn btn-info btn-block mt-4" type="submit" /> 
                 
